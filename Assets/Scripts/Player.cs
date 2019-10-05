@@ -8,6 +8,7 @@ public class Player : MonoBehaviour {
 	private float move;
 	private bool jump;
 	public float maxSpeed = 3.0f;
+	public float maxRunSpeed = 6.0f;
 	public float jumpForce = 20f;
 	public bool grounded = true;
     public LayerMask whatIsGround;
@@ -51,17 +52,33 @@ public class Player : MonoBehaviour {
 		else {
 			animator.SetBool("isMoving", false);
 		}
-
+		
+		if(GetComponent<Rigidbody2D> ().velocity.x > 5.0f || GetComponent<Rigidbody2D> ().velocity.x < -5.0f)
+		{
+			animator.SetBool("isRunning", true);
+		}
+		else
+		{
+			animator.SetBool("isRunning",false);
+		}
 		jump = Input.GetButtonDown ("Jump") || Input.GetButtonDown ("Vertical");
 		
 		//Debug.Log ("move = " + move);
 	}
 	void FixedUpdate () {
-		GetComponent<Rigidbody2D> ().velocity = new Vector2 (move * maxSpeed, GetComponent<Rigidbody2D> ().velocity.y);	
-
+		if(Input.GetButton("Run") )
+		{
+			GetComponent<Rigidbody2D> ().velocity = new Vector2 (move * maxRunSpeed, GetComponent<Rigidbody2D> ().velocity.y);
+			Debug.Log("hi");
+		}
+		else
+		{
+			GetComponent<Rigidbody2D> ().velocity = new Vector2 (move * maxSpeed, GetComponent<Rigidbody2D> ().velocity.y);
+		}
 		if (grounded && jump) {
 			GetComponent<Rigidbody2D> ().AddForce(new Vector2(0f, 4f), ForceMode2D.Impulse);
 		}
+
 	}
     void Flip()
     {
