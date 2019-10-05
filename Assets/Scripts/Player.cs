@@ -91,7 +91,16 @@ public class Player : MonoBehaviour {
 	void OnTriggerEnter2D(Collider2D coll){
 		if (coll.gameObject.tag == "earth_totem" ) {
 			Destroy(coll.gameObject);
+			GameState.hasEarthTotem = true;
 		}
+		if (coll.gameObject.tag == "earth" ) {
+			if (GameState.hasEarthTotem) {
+				BoxCollider2D[] components = coll.gameObject.GetComponents<BoxCollider2D>();
+				foreach(BoxCollider2D component in components) {
+					component.enabled = false;
+				}
+			}
+		}		
 		if (coll.gameObject.tag == "spikes" ) {
 			SpawnPoint.SwitchToLevel (this.gameObject);
 			Debug.Log("Loading scene1");

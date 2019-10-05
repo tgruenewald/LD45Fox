@@ -7,6 +7,7 @@ public static class GameState
 {
     private static GameObject droplet = null;
     public static GameObject introMusic = null;
+	public static Boolean hasEarthTotem = false;
 
 
 
