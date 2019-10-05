@@ -89,6 +89,9 @@ public class Player : MonoBehaviour {
         transform.localScale = theScale;
     }	
 	void OnTriggerEnter2D(Collider2D coll){
+		if (coll.gameObject.tag == "earth_totem" ) {
+			Destroy(coll.gameObject);
+		}
 		if (coll.gameObject.tag == "spikes" ) {
 			SpawnPoint.SwitchToLevel (this.gameObject);
 			Debug.Log("Loading scene1");
