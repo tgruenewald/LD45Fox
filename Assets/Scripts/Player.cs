@@ -18,7 +18,7 @@ public class Player : MonoBehaviour {
 
     public void SpawnAt(GameObject myPlayer)
     {
-		Camera.main.GetComponent<Camera2DFollow>().target = myPlayer.transform;
+		Camera.main.GetComponent<SmoothCamera>().target = myPlayer;
 		myPlayer.GetComponent<BoxCollider2D> ().enabled = true;
 
     }
