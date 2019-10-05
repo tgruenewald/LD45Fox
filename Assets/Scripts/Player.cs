@@ -60,7 +60,7 @@ public class Player : MonoBehaviour {
 		GetComponent<Rigidbody2D> ().velocity = new Vector2 (move * maxSpeed, GetComponent<Rigidbody2D> ().velocity.y);	
 
 		if (grounded && jump) {
-			GetComponent<Rigidbody2D> ().AddForce(new Vector2(0f, jumpForce));
+			GetComponent<Rigidbody2D> ().AddForce(new Vector2(0f, 4f), ForceMode2D.Impulse);
 		}
 	}
     void Flip()
