@@ -6,15 +6,19 @@ using UnityStandardAssets._2D;
 
 public class Player : MonoBehaviour {
 	private float move;
+	public static int defalutJumpNum = 1;
+	public int jumpNum = defalutJumpNum;
 	private bool jump = false;
 	public float maxSpeed = 3.0f;
 	public float maxRunSpeed = 6.0f;
 	public float jumpForce = 20f;
 	public bool grounded = true;
     public LayerMask whatIsGround;
+	public bool hasDoubleJump;
 	private CircleCollider2D groundCheck;
 	private Animator animator;
 	private bool facingRight = true;
+	  
 	// Use this for initialization
 
     public void SpawnAt(GameObject myPlayer)
@@ -24,13 +28,14 @@ public class Player : MonoBehaviour {
 
     }
 	void Awake(){
-		DontDestroyOnLoad (this.gameObject);
-
+		DontDestroyOnLoad (this.gameObject); 
 	}	
 	void Start () {
 		groundCheck = GetComponent<CircleCollider2D>();
 		animator = GetComponent<Animator>();
 	}
+		
+	
 
 	
 	// Update is called once per frame
@@ -75,6 +80,10 @@ public class Player : MonoBehaviour {
 		//Debug.Log ("move = " + move);
 	}
 	void FixedUpdate () {
+		if(grounded)
+			{
+				jumpNum = defalutJumpNum;
+			}
 		if(Input.GetButton("Run") )
 		{
 			GetComponent<Rigidbody2D> ().velocity = new Vector2 (move * maxRunSpeed, GetComponent<Rigidbody2D> ().velocity.y);
@@ -83,8 +92,14 @@ public class Player : MonoBehaviour {
 		{
 			GetComponent<Rigidbody2D> ().velocity = new Vector2 (move * maxSpeed, GetComponent<Rigidbody2D> ().velocity.y);
 		}
-		if (grounded && jump) {
-			GetComponent<Rigidbody2D> ().AddForce(new Vector2(0f, 4f), ForceMode2D.Impulse);
+		if (grounded && jump && !hasDoubleJump) {
+			GetComponent<Rigidbody2D> ().AddForce(new Vector2(0f, 4f * jumpForce), ForceMode2D.Impulse);
+		}
+		else if(hasDoubleJump && jump && jumpNum > 0)
+		{
+			GetComponent<Rigidbody2D> ().AddForce(new Vector2(0f, 4f * jumpForce), ForceMode2D.Impulse);
+			jumpNum--;
+			
 		}
 
 	}
@@ -125,4 +140,5 @@ public class Player : MonoBehaviour {
 	// 	if (coll.gameObject.layer == LayerMask.NameToLayer ("Water"))
 	// 		isTouchingWater = false;
 	// }
+	
 }
