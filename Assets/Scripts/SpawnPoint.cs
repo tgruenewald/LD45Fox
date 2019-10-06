@@ -50,6 +50,7 @@ public class SpawnPoint : MonoBehaviour {
 		}
 	}	
 	public void exitStore() {
+		GameState.isGamePaused = false;
 		SpawnPoint.SwitchToLevel (this.gameObject);
 		SceneManager.LoadScene(GameState.currentLevel);
 	}	

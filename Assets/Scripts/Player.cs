@@ -40,11 +40,14 @@ public class Player : MonoBehaviour {
 	IEnumerator Fullness() {
 		while (true) {
 			yield return new WaitForSeconds(3);
-			if (GameState.appleCount > 0) {
-				GameState.appleCount--;
-			} else {
-				GameState.fullnessCount--;
+			if (!GameState.isGamePaused) {
+				if (GameState.appleCount > 0) {
+					GameState.appleCount--;
+				} else {
+					GameState.fullnessCount--;
+				}
 			}
+
 			GameState.fullnessCountText.GetComponent<Text>().text = GameState.fullnessCount.ToString();
 			GameState.appleCountText.GetComponent<Text>().text = GameState.appleCount.ToString();
 			

@@ -22,6 +22,7 @@ public static class GameState
 	public static bool hasJetpack = false;
 	public static bool hasDoubleJump = false;
 	public static bool hasSprint = false;
+	public static bool isGamePaused = false;
 
 	public static string currentLevel = "scene1";
 
