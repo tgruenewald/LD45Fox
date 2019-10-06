@@ -22,6 +22,7 @@ public class Player : MonoBehaviour {
 	  
 	// Use this for initialization
 
+	
     public void SpawnAt(GameObject myPlayer)
     {
 		Camera.main.GetComponent<SmoothCamera>().target = myPlayer;
