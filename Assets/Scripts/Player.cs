@@ -84,22 +84,26 @@ public class Player : MonoBehaviour {
 			animator.SetBool("isMoving", false);
 		}
 		
-		if(Input.GetButton("Fly"))
-		{
-			animator.SetBool("IsFlying",true);
-			Debug.Log("fly");
+		if (hasJetPack) {
+			if(Input.GetButton("Fly"))
+			{
+				animator.SetBool("IsFlying",true);
+				Debug.Log("fly");
+			}
+			else
+			{
+				animator.SetBool("IsFlying",false);
+			}
+			if (jetPackFuel <= 0) {
+				animator.SetBool("IsFlying",false);
+			}
 		}
-		else
-		{
-			animator.SetBool("IsFlying",false);
-		}
+
 		if ((jump || !grounded) && !Input.GetButton("Fly")) {
-			Debug.Log("Jumping");
 			animator.SetBool("isJumping", true);
 		}
 		else {
 			animator.SetBool("isJumping", false);
-			Debug.Log("not Jumping");
 		}
 		
 		if(GetComponent<Rigidbody2D> ().velocity.x > 3.0f || GetComponent<Rigidbody2D> ().velocity.x < -3.0f)
@@ -133,15 +137,20 @@ public class Player : MonoBehaviour {
 		{
 			GetComponent<Rigidbody2D> ().velocity = new Vector2 (move * maxSpeed, GetComponent<Rigidbody2D> ().velocity.y);
 		}
-		if (grounded && jump && !hasDoubleJump) {
+		if (grounded && jump) {
+			Debug.Log("single jump");
 			GetComponent<Rigidbody2D> ().AddForce(new Vector2(0f, 4f * jumpForce), ForceMode2D.Impulse);
+		} else {
+
+			if(hasDoubleJump && jump && jumpNum > 0)
+			{
+				Debug.Log("double jump");
+				GetComponent<Rigidbody2D> ().AddForce(new Vector2(0f, 4f * jumpForce), ForceMode2D.Impulse);
+				jumpNum--;
+				
+			}
 		}
-		else if(hasDoubleJump && jump && jumpNum > 0)
-		{
-			GetComponent<Rigidbody2D> ().AddForce(new Vector2(0f, 4f * jumpForce), ForceMode2D.Impulse);
-			jumpNum--;
-			
-		}
+
 		if(hasJetPack && Input.GetButton("Fly") && jetPackFuel > 0)
 		{
 			GetComponent<Rigidbody2D> ().AddForce(new Vector2(0f, jetpackstrength), ForceMode2D.Impulse);

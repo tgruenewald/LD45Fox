@@ -126,6 +126,10 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967247
   hasDoubleJump: 1
+  hasJetPack: 1
+  jetPackFuel: 100
+  jetpackMaxFuel: 100
+  jetpackstrength: 0.5
 --- !u!95 &95418454608356982
 Animator:
   serializedVersion: 3
