@@ -30,4 +30,5 @@ public static class GameState
 
 		return droplet.GetComponent<Player>();
 	}
+	
 }
