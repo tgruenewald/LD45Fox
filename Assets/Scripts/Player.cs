@@ -16,6 +16,10 @@ public class Player : MonoBehaviour {
 	public bool grounded = true;
     public LayerMask whatIsGround;
 	public bool hasDoubleJump;
+	public bool hasJetPack;
+	public int jetPackFuel = 100;
+	public int jetpackMaxFuel = 100;
+	public float jetpackstrength;
 	private CircleCollider2D groundCheck;
 	private Animator animator;
 	private bool facingRight = true;
@@ -60,14 +64,23 @@ public class Player : MonoBehaviour {
 		else {
 			animator.SetBool("isMoving", false);
 		}
-
-		if (jump || !grounded) {
+		
+		if(Input.GetButton("Fly"))
+		{
+			animator.SetBool("IsFlying",true);
+			Debug.Log("fly");
+		}
+		else
+		{
+			animator.SetBool("IsFlying",false);
+		}
+		if ((jump || !grounded) && !Input.GetButton("Fly")) {
 			Debug.Log("Jumping");
 			animator.SetBool("isJumping", true);
 		}
 		else {
-			Debug.Log("not Jumping");
 			animator.SetBool("isJumping", false);
+			Debug.Log("not Jumping");
 		}
 		
 		if(GetComponent<Rigidbody2D> ().velocity.x > 3.0f || GetComponent<Rigidbody2D> ().velocity.x < -3.0f)
@@ -78,6 +91,7 @@ public class Player : MonoBehaviour {
 		{
 			animator.SetBool("isRunning",false);
 		}
+		
 		jump = Input.GetButtonDown ("Jump") || Input.GetButtonDown ("Vertical");
 		
 		//Debug.Log ("move = " + move);
@@ -86,6 +100,11 @@ public class Player : MonoBehaviour {
 		if(grounded)
 			{
 				jumpNum = defalutJumpNum;
+				if(jetPackFuel < jetpackMaxFuel)
+				{
+					jetPackFuel++;
+				}
+
 			}
 		if(Input.GetButton("Run") )
 		{
@@ -104,7 +123,11 @@ public class Player : MonoBehaviour {
 			jumpNum--;
 			
 		}
-
+		if(hasJetPack && Input.GetButton("Fly") && jetPackFuel > 0)
+		{
+			GetComponent<Rigidbody2D> ().AddForce(new Vector2(0f, jetpackstrength), ForceMode2D.Impulse);
+			jetPackFuel--;
+		}
 	}
     void Flip()
     {
