@@ -10,6 +10,10 @@ public static class GameState
 	public static Boolean hasEarthTotem = false;
 	public static GameObject fullnessCountText;
 	public static GameObject appleCountText;
+
+	public static GameObject appleTotalCountText;
+
+	public static int appleTotalCount = 0;
 	public static int fullnessCount = 100;  // at 0 you die
 	public static int appleCount = 0;	// at 100 you create surplus
 	public static int surplusCount = 0;

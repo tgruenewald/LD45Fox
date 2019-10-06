@@ -22,9 +22,9 @@ public class Player : MonoBehaviour {
 	  
 	// Use this for initialization
 
-	IEnumerator Hunger() {
+	IEnumerator Fullness() {
 		while (true) {
-			yield return new WaitForSeconds(1);
+			yield return new WaitForSeconds(3);
 			if (GameState.appleCount > 0) {
 				GameState.appleCount--;
 			} else {
@@ -41,7 +41,12 @@ public class Player : MonoBehaviour {
 //		myPlayer.GetComponent<BoxCollider2D> ().enabled = true;
 		GameState.appleCountText = GameObject.Find("AppleCount");
 		GameState.fullnessCountText = GameObject.Find("FullnessCount");
-		StartCoroutine("Hunger");
+		GameObject[] apples = GameObject.FindGameObjectsWithTag("apple");
+		GameState.appleTotalCountText = GameObject.Find("AppleTotalCount");
+		GameState.appleTotalCountText.GetComponent<Text>().text = apples.Length.ToString();
+		GameState.appleTotalCount = apples.Length;
+		StartCoroutine("Fullness");
+
 
     }
 	void Awake(){
@@ -133,11 +138,13 @@ public class Player : MonoBehaviour {
 			Destroy(coll.gameObject);
 			GameState.hasEarthTotem = true;
 			GameState.appleCount++;
+			GameState.appleTotalCount--;
 			if (GameState.fullnessCount < 100) {
 				GameState.fullnessCount++;
 				GameState.appleCount--;
 			}
 			GameState.appleCountText.GetComponent<Text>().text = GameState.appleCount.ToString();
+			GameState.appleTotalCountText.GetComponent<Text>().text = GameState.appleTotalCount.ToString();
 		}
 		if (coll.gameObject.tag == "earth" ) {
 			if (GameState.hasEarthTotem) {
