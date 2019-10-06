@@ -74,7 +74,7 @@ SpriteRenderer:
   m_SortingLayerID: -1425465029
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 43fc028084dc73847b1c06c5673f26ea, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 8695442f02a30f44685ac0e049369862, type: 3}
   m_Color: {r: 0.9558824, g: 0.7098832, b: 0.7098832, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -123,7 +123,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 3, y: 3}
+    oldSize: {x: 2, y: 2}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -144,8 +144,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5f36fbb6cec38e46936e389d1bc2a71, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxSpeed: 5
-  maxRunSpeed: 10
+  maxSpeed: 2
+  maxRunSpeed: 5
   jumpForce: 400
   grounded: 1
   whatIsGround:

@@ -6,7 +6,7 @@ using UnityStandardAssets._2D;
 
 public class Player : MonoBehaviour {
 	private float move;
-	private bool jump;
+	private bool jump = false;
 	public float maxSpeed = 3.0f;
 	public float maxRunSpeed = 6.0f;
 	public float jumpForce = 20f;
@@ -52,8 +52,17 @@ public class Player : MonoBehaviour {
 		else {
 			animator.SetBool("isMoving", false);
 		}
+
+		if (jump || !grounded) {
+			Debug.Log("Jumping");
+			animator.SetBool("isJumping", true);
+		}
+		else {
+			Debug.Log("not Jumping");
+			animator.SetBool("isJumping", false);
+		}
 		
-		if(GetComponent<Rigidbody2D> ().velocity.x > 5.0f || GetComponent<Rigidbody2D> ().velocity.x < -5.0f)
+		if(GetComponent<Rigidbody2D> ().velocity.x > 3.0f || GetComponent<Rigidbody2D> ().velocity.x < -3.0f)
 		{
 			animator.SetBool("isRunning", true);
 		}
@@ -69,7 +78,6 @@ public class Player : MonoBehaviour {
 		if(Input.GetButton("Run") )
 		{
 			GetComponent<Rigidbody2D> ().velocity = new Vector2 (move * maxRunSpeed, GetComponent<Rigidbody2D> ().velocity.y);
-			Debug.Log("hi");
 		}
 		else
 		{
@@ -91,7 +99,16 @@ public class Player : MonoBehaviour {
 	void OnTriggerEnter2D(Collider2D coll){
 		if (coll.gameObject.tag == "earth_totem" ) {
 			Destroy(coll.gameObject);
+			GameState.hasEarthTotem = true;
 		}
+		if (coll.gameObject.tag == "earth" ) {
+			if (GameState.hasEarthTotem) {
+				BoxCollider2D[] components = coll.gameObject.GetComponents<BoxCollider2D>();
+				foreach(BoxCollider2D component in components) {
+					component.enabled = false;
+				}
+			}
+		}		
 		if (coll.gameObject.tag == "spikes" ) {
 			SpawnPoint.SwitchToLevel (this.gameObject);
 			Debug.Log("Loading scene1");
