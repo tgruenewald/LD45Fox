@@ -15,8 +15,9 @@ public class Player : MonoBehaviour {
 	public float jumpForce = 20f;
 	public bool grounded = true;
     public LayerMask whatIsGround;
-	public bool hasDoubleJump;
-	public bool hasJetPack;
+	public bool hasDoubleJump = false;
+	public bool hasJetPack = false;
+	public bool hasSprint = false;
 	public int jetPackFuel = 100;
 	public int jetpackMaxFuel = 100;
 	public float jetpackstrength;
@@ -25,6 +26,16 @@ public class Player : MonoBehaviour {
 	private bool facingRight = true;
 	  
 	// Use this for initialization
+	IEnumerator Fuel() {
+		while (true) {
+			yield return new WaitForSeconds(0.5f);
+			GameState.JetPackFuelText.GetComponent<Text>().text = jetPackFuel.ToString();
+			hasDoubleJump = GameState.hasDoubleJump;
+			hasJetPack = GameState.hasJetpack;
+			hasSprint = GameState.hasSprint;
+
+		}
+	}
 
 	IEnumerator Fullness() {
 		while (true) {
@@ -36,7 +47,7 @@ public class Player : MonoBehaviour {
 			}
 			GameState.fullnessCountText.GetComponent<Text>().text = GameState.fullnessCount.ToString();
 			GameState.appleCountText.GetComponent<Text>().text = GameState.appleCount.ToString();
-
+			
 		}
 	}
     public void SpawnAt(GameObject myPlayer)
@@ -47,9 +58,11 @@ public class Player : MonoBehaviour {
 		GameState.fullnessCountText = GameObject.Find("FullnessCount");
 		GameObject[] apples = GameObject.FindGameObjectsWithTag("apple");
 		GameState.appleTotalCountText = GameObject.Find("AppleTotalCount");
+		GameState.JetPackFuelText = GameObject.Find("JetPackFuelText");
 		GameState.appleTotalCountText.GetComponent<Text>().text = apples.Length.ToString();
 		GameState.appleTotalCount = apples.Length;
 		StartCoroutine("Fullness");
+		StartCoroutine("Fuel");
 
 
     }
@@ -129,7 +142,7 @@ public class Player : MonoBehaviour {
 				}
 
 			}
-		if(Input.GetButton("Run") )
+		if(Input.GetButton("Run") && hasSprint )
 		{
 			GetComponent<Rigidbody2D> ().velocity = new Vector2 (move * maxRunSpeed, GetComponent<Rigidbody2D> ().velocity.y);
 		}
@@ -186,10 +199,10 @@ public class Player : MonoBehaviour {
 				}
 			}
 		}		
-		if (coll.gameObject.tag == "spikes" ) {
+		if (coll.gameObject.tag == "store" ) {
 			SpawnPoint.SwitchToLevel (this.gameObject);
-			Debug.Log("Loading scene1");
-			SceneManager.LoadScene("scene1");
+			Debug.Log("Loading store");
+			SceneManager.LoadScene("store2");
 		}
 		if (coll.gameObject.tag == "exit" ) {
 			SpawnPoint.SwitchToLevel (this.gameObject);

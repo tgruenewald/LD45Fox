@@ -10,6 +10,7 @@ TagManager:
   - earth_totem
   - earth
   - apple
+  - store
   layers:
   - Default
   - TransparentFX

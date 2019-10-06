@@ -2,13 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityStandardAssets._2D;
-
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 public class SpawnPoint : MonoBehaviour {
 	void Awake() {
 		var playerDroplet = GameState.GetPlayerDroplet();
 		if (playerDroplet != null)
 		{
-			playerDroplet.SpawnAt(playerDroplet.gameObject);
+			// playerDroplet.SpawnAt(playerDroplet.gameObject);
+			playerDroplet.SpawnAt(gameObject);
 
 		}
 		else
@@ -24,10 +26,37 @@ public class SpawnPoint : MonoBehaviour {
 
 	}
 
+	public void buyJetpack() {
+		if (!GameState.hasJetpack && GameState.appleCount > 20) {
+			Debug.Log("You have a jet pack");
+			GameState.appleCount -= 20;
+			GameState.hasJetpack = true;
+		}
+	}	
+
+	public void buyDoubleJump() {
+		if (!GameState.hasDoubleJump && GameState.appleCount > 10) {
+			Debug.Log("You have double jump");
+			GameState.appleCount -= 10;
+			GameState.hasDoubleJump = true;
+		}
+	}	
+
+	public void buySprint() {
+		if (!GameState.hasSprint && GameState.appleCount > 5) {
+			Debug.Log("You have sprint");
+			GameState.appleCount -= 5;
+			GameState.hasSprint = true;
+		}
+	}	
+	public void exitStore() {
+		SpawnPoint.SwitchToLevel (this.gameObject);
+		SceneManager.LoadScene(GameState.currentLevel);
+	}	
 	public static void SwitchToLevel(GameObject playerObject)
 	{
 		playerObject.GetComponent<Transform>().position = GameObject.FindObjectsOfType<SpawnPoint>()[0].GetComponent<Transform>().position;
-		playerObject.GetComponent<BoxCollider2D> ().enabled = false;
+		// playerObject.GetComponent<BoxCollider2D> ().enabled = false;
 		GameState.SetPlayerDroplet(playerObject);
 		//GameState.GetPlayerDroplet().StopAllAudio();
 	}	

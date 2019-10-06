@@ -12,15 +12,23 @@ public static class GameState
 	public static GameObject appleCountText;
 
 	public static GameObject appleTotalCountText;
+	public static GameObject JetPackFuelText;
 
 	public static int appleTotalCount = 0;
 	public static int fullnessCount = 100;  // at 0 you die
-	public static int appleCount = 0;	// at 100 you create surplus
+	public static int appleCount = 50;	// at 100 you create surplus
 	public static int surplusCount = 0;
+
+	public static bool hasJetpack = false;
+	public static bool hasDoubleJump = false;
+	public static bool hasSprint = false;
+
+	public static string currentLevel = "scene1";
 
 	public static void SetPlayerDroplet(GameObject droplet){
 		GameState.droplet = droplet;
 	}
+
 
 	public static Player GetPlayerDroplet(){
 		if(droplet == null){
