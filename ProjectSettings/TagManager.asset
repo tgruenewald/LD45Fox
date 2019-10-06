@@ -48,8 +48,20 @@ TagManager:
   - name: background
     uniqueID: 646204809
     locked: 0
+  - name: Behind-Bush
+    uniqueID: 2403907139
+    locked: 0
+  - name: Bush
+    uniqueID: 598250189
+    locked: 0
+  - name: Trees
+    uniqueID: 3650961739
+    locked: 0
   - name: in_front_of_background
     uniqueID: 1942715567
+    locked: 0
+  - name: frontfrontbackground
+    uniqueID: 95246759
     locked: 0
   - name: Default
     uniqueID: 0
