@@ -28,9 +28,9 @@ public class Player : MonoBehaviour {
 			if (GameState.appleCount > 0) {
 				GameState.appleCount--;
 			} else {
-				GameState.hungerCount++;
+				GameState.fullnessCount--;
 			}
-			GameState.hungerCountText.GetComponent<Text>().text = GameState.hungerCount.ToString();
+			GameState.fullnessCountText.GetComponent<Text>().text = GameState.fullnessCount.ToString();
 			GameState.appleCountText.GetComponent<Text>().text = GameState.appleCount.ToString();
 
 		}
@@ -40,7 +40,7 @@ public class Player : MonoBehaviour {
 		Camera.main.GetComponent<SmoothCamera>().target = myPlayer;
 //		myPlayer.GetComponent<BoxCollider2D> ().enabled = true;
 		GameState.appleCountText = GameObject.Find("AppleCount");
-		GameState.hungerCountText = GameObject.Find("HungerCount");
+		GameState.fullnessCountText = GameObject.Find("FullnessCount");
 		StartCoroutine("Hunger");
 
     }
@@ -133,8 +133,8 @@ public class Player : MonoBehaviour {
 			Destroy(coll.gameObject);
 			GameState.hasEarthTotem = true;
 			GameState.appleCount++;
-			if (GameState.hungerCount > 0) {
-				GameState.hungerCount--;
+			if (GameState.fullnessCount < 100) {
+				GameState.fullnessCount++;
 				GameState.appleCount--;
 			}
 			GameState.appleCountText.GetComponent<Text>().text = GameState.appleCount.ToString();

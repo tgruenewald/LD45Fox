@@ -9,6 +9,7 @@ TagManager:
   - Fire
   - earth_totem
   - earth
+  - apple
   layers:
   - Default
   - TransparentFX
