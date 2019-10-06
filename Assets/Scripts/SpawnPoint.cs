@@ -9,8 +9,8 @@ public class SpawnPoint : MonoBehaviour {
 		var playerDroplet = GameState.GetPlayerDroplet();
 		if (playerDroplet != null)
 		{
-			// playerDroplet.SpawnAt(playerDroplet.gameObject);
-			playerDroplet.SpawnAt(gameObject);
+			playerDroplet.SpawnAt(playerDroplet.gameObject);
+			// playerDroplet.SpawnAt(gameObject);
 
 		}
 		else

@@ -52,6 +52,7 @@ public class Player : MonoBehaviour {
 	}
     public void SpawnAt(GameObject myPlayer)
     {
+		Debug.Log("Spawning again");
 		Camera.main.GetComponent<SmoothCamera>().target = myPlayer;
 //		myPlayer.GetComponent<BoxCollider2D> ().enabled = true;
 		GameState.appleCountText = GameObject.Find("AppleCount");
