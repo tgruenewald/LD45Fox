@@ -22,12 +22,26 @@ public class Player : MonoBehaviour {
 	  
 	// Use this for initialization
 
-	
+	IEnumerator Hunger() {
+		while (true) {
+			yield return new WaitForSeconds(1);
+			if (GameState.appleCount > 0) {
+				GameState.appleCount--;
+			} else {
+				GameState.hungerCount++;
+			}
+			GameState.hungerCountText.GetComponent<Text>().text = GameState.hungerCount.ToString();
+			GameState.appleCountText.GetComponent<Text>().text = GameState.appleCount.ToString();
+
+		}
+	}
     public void SpawnAt(GameObject myPlayer)
     {
 		Camera.main.GetComponent<SmoothCamera>().target = myPlayer;
 //		myPlayer.GetComponent<BoxCollider2D> ().enabled = true;
 		GameState.appleCountText = GameObject.Find("AppleCount");
+		GameState.hungerCountText = GameObject.Find("HungerCount");
+		StartCoroutine("Hunger");
 
     }
 	void Awake(){
@@ -115,10 +129,14 @@ public class Player : MonoBehaviour {
         transform.localScale = theScale;
     }	
 	void OnTriggerEnter2D(Collider2D coll){
-		if (coll.gameObject.tag == "earth_totem" ) {
+		if (coll.gameObject.tag == "apple" ) {
 			Destroy(coll.gameObject);
 			GameState.hasEarthTotem = true;
 			GameState.appleCount++;
+			if (GameState.hungerCount > 0) {
+				GameState.hungerCount--;
+				GameState.appleCount--;
+			}
 			GameState.appleCountText.GetComponent<Text>().text = GameState.appleCount.ToString();
 		}
 		if (coll.gameObject.tag == "earth" ) {
