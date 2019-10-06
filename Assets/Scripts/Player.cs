@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityStandardAssets._2D;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour {
 	private float move;
@@ -20,7 +21,8 @@ public class Player : MonoBehaviour {
     public void SpawnAt(GameObject myPlayer)
     {
 		Camera.main.GetComponent<SmoothCamera>().target = myPlayer;
-		myPlayer.GetComponent<BoxCollider2D> ().enabled = true;
+//		myPlayer.GetComponent<BoxCollider2D> ().enabled = true;
+		GameState.appleCountText = GameObject.Find("AppleCount");
 
     }
 	void Awake(){
@@ -100,6 +102,8 @@ public class Player : MonoBehaviour {
 		if (coll.gameObject.tag == "earth_totem" ) {
 			Destroy(coll.gameObject);
 			GameState.hasEarthTotem = true;
+			GameState.appleCount++;
+			GameState.appleCountText.GetComponent<Text>().text = GameState.appleCount.ToString();
 		}
 		if (coll.gameObject.tag == "earth" ) {
 			if (GameState.hasEarthTotem) {
