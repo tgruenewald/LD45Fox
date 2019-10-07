@@ -51,8 +51,9 @@ public class SpawnPoint : MonoBehaviour {
 	}	
 	public void exitStore() {
 		GameState.isGamePaused = false;
-		SpawnPoint.SwitchToLevel (this.gameObject);
-		SceneManager.LoadScene(GameState.currentLevel);
+		// SpawnPoint.SwitchToLevel (this.gameObject);
+		SceneManager.UnloadSceneAsync("store2");
+		//SceneManager.LoadScene(GameState.currentLevel, );
 	}	
 	public static void SwitchToLevel(GameObject playerObject)
 	{

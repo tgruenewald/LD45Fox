@@ -24,6 +24,8 @@ public class Player : MonoBehaviour {
 	private CircleCollider2D groundCheck;
 	private Animator animator;
 	private bool facingRight = true;
+
+	private CharacterController playerCharController;
 	  
 	// Use this for initialization
 	IEnumerator Fuel() {
@@ -79,6 +81,7 @@ public class Player : MonoBehaviour {
 		DontDestroyOnLoad (this.gameObject); 
 	}	
 	void Start () {
+		playerCharController = GetComponent<CharacterController>();
 		groundCheck = GetComponent<CircleCollider2D>();
 		animator = GetComponent<Animator>();
 	}
@@ -88,6 +91,11 @@ public class Player : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		if (GameState.isGamePaused) {
+			playerCharController.enabled = false;
+			return;
+		}
+
 		grounded = groundCheck.IsTouchingLayers (whatIsGround);
 
 		move = Input.GetAxis ("Horizontal");
@@ -214,9 +222,10 @@ public class Player : MonoBehaviour {
 			}
 		}		
 		if (coll.gameObject.tag == "store" ) {
-			SpawnPoint.SwitchToLevel (this.gameObject);
+			// SpawnPoint.SwitchToLevel (this.gameObject);
+			GameState.isGamePaused  = true;
 			Debug.Log("Loading store");
-			SceneManager.LoadScene("store2");
+			SceneManager.LoadScene("store2", LoadSceneMode.Additive);
 		}
 		if (coll.gameObject.tag == "exit" ) {
 			SpawnPoint.SwitchToLevel (this.gameObject);
