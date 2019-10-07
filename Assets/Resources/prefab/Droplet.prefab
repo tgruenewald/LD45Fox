@@ -119,8 +119,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   jumpNum: 1
-  maxSpeed: 2
-  maxRunSpeed: 5
+  maxSpeed: 4
+  maxRunSpeed: 10
   jumpForce: 1
   grounded: 1
   whatIsGround:
