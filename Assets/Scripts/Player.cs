@@ -235,6 +235,7 @@ public class Player : MonoBehaviour {
 		if (coll.gameObject.tag == "store" ) {
 			// SpawnPoint.SwitchToLevel (this.gameObject);
 			GameState.isGamePaused  = true;
+			GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeAll;
 			Debug.Log("Loading store");
 			SceneManager.LoadScene("store2", LoadSceneMode.Additive);
 		}

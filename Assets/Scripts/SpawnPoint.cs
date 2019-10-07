@@ -52,6 +52,8 @@ public class SpawnPoint : MonoBehaviour {
 	public void exitStore() {
 		GameState.isGamePaused = false;
 		// SpawnPoint.SwitchToLevel (this.gameObject);
+
+		GameObject.FindGameObjectWithTag("Player").GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeRotation;
 		SceneManager.UnloadSceneAsync("store2");
 		//SceneManager.LoadScene(GameState.currentLevel, );
 	}	
