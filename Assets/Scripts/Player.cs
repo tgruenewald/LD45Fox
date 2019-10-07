@@ -68,6 +68,10 @@ public class Player : MonoBehaviour {
 		while (true) {
 			yield return new WaitForSeconds(3);
 
+			GameObject[] apples = GameObject.FindGameObjectsWithTag("apple");
+			GameState.appleTotalCount = apples.Length;			
+			GameState.appleTotalCountText.GetComponent<Text>().text = GameState.appleTotalCount.ToString();
+
 			fuelMessage = true;
 			if (!GameState.isGamePaused) {
 				if (GameState.appleCount > 0) {
@@ -270,13 +274,14 @@ public class Player : MonoBehaviour {
 			Destroy(coll.gameObject, 2f);
 			GameState.hasEarthTotem = true;
 			GameState.appleCount++;
-			GameState.appleTotalCount--;
+			
 			if (GameState.fullnessCount < 20) {
 				GameState.fullnessCount += 1;
 				GameState.appleCount--;
 			}
+
 			GameState.appleCountText.GetComponent<Text>().text = GameState.appleCount.ToString();
-			GameState.appleTotalCountText.GetComponent<Text>().text = GameState.appleTotalCount.ToString();
+
 		}
 		if (coll.gameObject.tag == "earth" ) {
 			if (GameState.hasEarthTotem) {
