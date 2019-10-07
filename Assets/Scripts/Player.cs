@@ -25,6 +25,8 @@ public class Player : MonoBehaviour {
 	private Animator animator;
 	private bool facingRight = true;
 
+	public GameObject floatingText;
+
 	private CharacterController playerCharController;
 	  
 	// Use this for initialization
@@ -42,7 +44,7 @@ public class Player : MonoBehaviour {
 
 	IEnumerator Fullness() {
 		while (true) {
-			yield return new WaitForSeconds(3);
+			yield return new WaitForSeconds(2);
 			if (!GameState.isGamePaused) {
 				if (GameState.appleCount > 0) {
 					GameState.appleCount--;
@@ -50,6 +52,8 @@ public class Player : MonoBehaviour {
 					GameState.fullnessCount--;
 					if (GameState.fullnessCount <= 0) {
 						// you died
+						GameState.resetAll();
+						Destroy(gameObject);
 						SceneManager.LoadScene("gameover");
 					}
 				}
@@ -92,7 +96,8 @@ public class Player : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if (GameState.isGamePaused) {
-			playerCharController.enabled = false;
+			// playerCharController.enabled = false;
+
 			return;
 		}
 
@@ -195,19 +200,25 @@ public class Player : MonoBehaviour {
         theScale.x *= -1;
         transform.localScale = theScale;
     }	
+
+	string GetAppleText() {
+		if (GameState.fullnessCount < 20) {
+			return "Hungry";
+		} else {
+			return GameState.appleCount.ToString() + " Extra";
+		}
+	}
 	void OnTriggerEnter2D(Collider2D coll){
 		if (coll.gameObject.tag == "apple" ) {
-			Destroy(coll.gameObject);
+			floatingText.GetComponent<TextMesh>().text = GetAppleText();
+			Instantiate(floatingText, coll.gameObject.transform.position, Quaternion.identity, coll.gameObject.transform);
+			coll.gameObject.GetComponent<SpriteRenderer>().enabled = false;
+			Destroy(coll.gameObject, 2f);
 			GameState.hasEarthTotem = true;
 			GameState.appleCount++;
 			GameState.appleTotalCount--;
-			if (GameState.fullnessCount < 100) {
-				if (GameState.fullnessCount >= 97) {
-					GameState.fullnessCount = 100;
-				} else {
-					GameState.fullnessCount += 3;
-				}
-
+			if (GameState.fullnessCount < 20) {
+				GameState.fullnessCount += 1;
 				GameState.appleCount--;
 			}
 			GameState.appleCountText.GetComponent<Text>().text = GameState.appleCount.ToString();

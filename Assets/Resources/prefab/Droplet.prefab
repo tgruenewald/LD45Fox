@@ -132,6 +132,8 @@ MonoBehaviour:
   jetPackFuel: 100
   jetpackMaxFuel: 100
   jetpackstrength: 0.5
+  floatingText: {fileID: 6011038232250881138, guid: 9096d9f6d56548a448272ac77e9d1db6,
+    type: 3}
 --- !u!95 &95418454608356982
 Animator:
   serializedVersion: 3
