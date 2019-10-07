@@ -15,41 +15,105 @@ public class Player : MonoBehaviour {
 	public float jumpForce = 20f;
 	public bool grounded = true;
     public LayerMask whatIsGround;
-	public bool hasDoubleJump;
-	public bool hasJetPack;
+	public bool hasDoubleJump = false;
+	public bool hasJetPack = false;
+	public bool hasSprint = false;
 	public int jetPackFuel = 100;
 	public int jetpackMaxFuel = 100;
+	bool fuelMessage = true;
 	public float jetpackstrength;
 	private CircleCollider2D groundCheck;
 	private Animator animator;
 	private bool facingRight = true;
+
+	public GameObject floatingText;
+	bool fuelReady = true;
+
+	private CharacterController playerCharController;
 	  
 	// Use this for initialization
+	IEnumerator Fuel() {
+		while (true) {
+			yield return new WaitForSeconds(0.5f);
+			if (GameState.appleTotalCount <= 0) {
+				// change to next level
+				SpawnPoint.SwitchToLevel (this.gameObject);
+				SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+			}
+
+			GameState.JetPackFuelText.GetComponent<Text>().text = jetPackFuel.ToString();
+			hasDoubleJump = GameState.hasDoubleJump;
+			hasJetPack = GameState.hasJetpack;
+			hasSprint = GameState.hasSprint;
+			GameState.fullnessCountText.GetComponent<Text>().text = GameState.fullnessCount.ToString();
+			GameState.appleCountText.GetComponent<Text>().text = GameState.appleCount.ToString();
+			GameState.JetPackFuelPacketText.GetComponent<Text>().text = GameState.jetFuelPacketes.ToString();
+		}
+	}
+
+	string GetFullnessText() {
+		if (GameState.fullnessCount > 15) {
+			return "Hungry";
+		} 
+		if (GameState.fullnessCount > 10) {
+			return "Starving";
+		} 
+		if (GameState.fullnessCount > 5) {
+			return "FAMISHED!";
+		} 		
+		return "Dying!!!!";
+	}
 
 	IEnumerator Fullness() {
 		while (true) {
 			yield return new WaitForSeconds(3);
-			if (GameState.appleCount > 0) {
-				GameState.appleCount--;
-			} else {
-				GameState.fullnessCount--;
+
+			GameObject[] apples = GameObject.FindGameObjectsWithTag("apple");
+			GameState.appleTotalCount = apples.Length;			
+			GameState.appleTotalCountText.GetComponent<Text>().text = GameState.appleTotalCount.ToString();
+
+			fuelMessage = true;
+			if (!GameState.isGamePaused) {
+				if (GameState.appleCount > 0) {
+					GameState.appleCount--;
+				} else {
+					// hungry
+					yield return new WaitForSeconds(0.5f);
+					if (GameState.fullnessCount < 20) {
+						floatingText.GetComponent<TextMesh>().text = GetFullnessText();
+						Instantiate(floatingText, transform.position, Quaternion.identity, transform);
+					}
+
+					GameState.fullnessCount--;
+					if (GameState.fullnessCount <= 0) {
+						// you died
+						GameState.resetAll();
+						Destroy(gameObject);
+						SceneManager.LoadScene("gameover");
+					}
+				}
 			}
+
 			GameState.fullnessCountText.GetComponent<Text>().text = GameState.fullnessCount.ToString();
 			GameState.appleCountText.GetComponent<Text>().text = GameState.appleCount.ToString();
-
+			
 		}
 	}
     public void SpawnAt(GameObject myPlayer)
     {
+		Debug.Log("Spawning again");
 		Camera.main.GetComponent<SmoothCamera>().target = myPlayer;
 //		myPlayer.GetComponent<BoxCollider2D> ().enabled = true;
 		GameState.appleCountText = GameObject.Find("AppleCount");
 		GameState.fullnessCountText = GameObject.Find("FullnessCount");
 		GameObject[] apples = GameObject.FindGameObjectsWithTag("apple");
 		GameState.appleTotalCountText = GameObject.Find("AppleTotalCount");
+		GameState.JetPackFuelText = GameObject.Find("JetPackFuelText");
+		GameState.JetPackFuelPacketText = GameObject.Find("JetPackFuelPacketText");
 		GameState.appleTotalCountText.GetComponent<Text>().text = apples.Length.ToString();
 		GameState.appleTotalCount = apples.Length;
 		StartCoroutine("Fullness");
+		StartCoroutine("Fuel");
 
 
     }
@@ -57,6 +121,7 @@ public class Player : MonoBehaviour {
 		DontDestroyOnLoad (this.gameObject); 
 	}	
 	void Start () {
+		playerCharController = GetComponent<CharacterController>();
 		groundCheck = GetComponent<CircleCollider2D>();
 		animator = GetComponent<Animator>();
 	}
@@ -66,6 +131,12 @@ public class Player : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		if (GameState.isGamePaused) {
+			// playerCharController.enabled = false;
+
+			return;
+		}
+
 		grounded = groundCheck.IsTouchingLayers (whatIsGround);
 
 		move = Input.GetAxis ("Horizontal");
@@ -83,23 +154,46 @@ public class Player : MonoBehaviour {
 		else {
 			animator.SetBool("isMoving", false);
 		}
-		
-		if(Input.GetButton("Fly"))
-		{
-			animator.SetBool("IsFlying",true);
-			Debug.Log("fly");
-		}
-		else
-		{
+		if (hasJetPack && Input.GetButton("Fly") && GameState.jetFuelPacketes <= 0) {
+			if (fuelMessage) {
+				floatingText.GetComponent<TextMesh>().text = "No fuel";
+				Instantiate(floatingText, transform.position, Quaternion.identity, transform);							
+				fuelMessage = false;
+			}
 			animator.SetBool("IsFlying",false);
 		}
+		if (hasJetPack && GameState.jetFuelPacketes > 0) {
+			if(Input.GetButton("Fly"))
+			{
+				animator.SetBool("IsFlying",true);
+
+				if (fuelMessage) {
+					floatingText.GetComponent<TextMesh>().text = GameState.jetFuelPacketes.ToString() + " fuel left";
+					Instantiate(floatingText, transform.position, Quaternion.identity, transform);				
+					fuelMessage = false;
+				}
+
+				Debug.Log("fly");
+			}
+			else
+			{
+				animator.SetBool("IsFlying",false);
+			}
+			if (jetPackFuel <= 0) {
+				animator.SetBool("IsFlying",false);
+				if (fuelReady) {
+					GameState.jetFuelPacketes--;
+					fuelReady = false;
+				}
+
+			}
+		}
+
 		if ((jump || !grounded) && !Input.GetButton("Fly")) {
-			Debug.Log("Jumping");
 			animator.SetBool("isJumping", true);
 		}
 		else {
 			animator.SetBool("isJumping", false);
-			Debug.Log("not Jumping");
 		}
 		
 		if(GetComponent<Rigidbody2D> ().velocity.x > 3.0f || GetComponent<Rigidbody2D> ().velocity.x < -3.0f)
@@ -123,9 +217,12 @@ public class Player : MonoBehaviour {
 				{
 					jetPackFuel++;
 				}
+				else {
+					fuelReady = true; 
+				}
 
 			}
-		if(Input.GetButton("Run") )
+		if(Input.GetButton("Run") && hasSprint )
 		{
 			GetComponent<Rigidbody2D> ().velocity = new Vector2 (move * maxRunSpeed, GetComponent<Rigidbody2D> ().velocity.y);
 		}
@@ -133,16 +230,21 @@ public class Player : MonoBehaviour {
 		{
 			GetComponent<Rigidbody2D> ().velocity = new Vector2 (move * maxSpeed, GetComponent<Rigidbody2D> ().velocity.y);
 		}
-		if (grounded && jump && !hasDoubleJump) {
+		if (grounded && jump) {
+			Debug.Log("single jump");
 			GetComponent<Rigidbody2D> ().AddForce(new Vector2(0f, 4f * jumpForce), ForceMode2D.Impulse);
+		} else {
+
+			if(hasDoubleJump && jump && jumpNum > 0)
+			{
+				Debug.Log("double jump");
+				GetComponent<Rigidbody2D> ().AddForce(new Vector2(0f, 4f * jumpForce), ForceMode2D.Impulse);
+				jumpNum--;
+				
+			}
 		}
-		else if(hasDoubleJump && jump && jumpNum > 0)
-		{
-			GetComponent<Rigidbody2D> ().AddForce(new Vector2(0f, 4f * jumpForce), ForceMode2D.Impulse);
-			jumpNum--;
-			
-		}
-		if(hasJetPack && Input.GetButton("Fly") && jetPackFuel > 0)
+
+		if(hasJetPack && Input.GetButton("Fly") && jetPackFuel > 0 && GameState.jetFuelPacketes > 0)
 		{
 			GetComponent<Rigidbody2D> ().AddForce(new Vector2(0f, jetpackstrength), ForceMode2D.Impulse);
 			jetPackFuel--;
@@ -156,18 +258,30 @@ public class Player : MonoBehaviour {
         theScale.x *= -1;
         transform.localScale = theScale;
     }	
+
+	string GetAppleText() {
+		if (GameState.fullnessCount < 20) {
+			return "Hungry";
+		} else {
+			return GameState.appleCount.ToString() + " Extra";
+		}
+	}
 	void OnTriggerEnter2D(Collider2D coll){
 		if (coll.gameObject.tag == "apple" ) {
-			Destroy(coll.gameObject);
+			floatingText.GetComponent<TextMesh>().text = GetAppleText();
+			Instantiate(floatingText, coll.gameObject.transform.position, Quaternion.identity, coll.gameObject.transform);
+			coll.gameObject.GetComponent<SpriteRenderer>().enabled = false;
+			Destroy(coll.gameObject, 2f);
 			GameState.hasEarthTotem = true;
 			GameState.appleCount++;
-			GameState.appleTotalCount--;
-			if (GameState.fullnessCount < 100) {
-				GameState.fullnessCount++;
+			
+			if (GameState.fullnessCount < 20) {
+				GameState.fullnessCount += 1;
 				GameState.appleCount--;
 			}
+
 			GameState.appleCountText.GetComponent<Text>().text = GameState.appleCount.ToString();
-			GameState.appleTotalCountText.GetComponent<Text>().text = GameState.appleTotalCount.ToString();
+
 		}
 		if (coll.gameObject.tag == "earth" ) {
 			if (GameState.hasEarthTotem) {
@@ -177,10 +291,12 @@ public class Player : MonoBehaviour {
 				}
 			}
 		}		
-		if (coll.gameObject.tag == "spikes" ) {
-			SpawnPoint.SwitchToLevel (this.gameObject);
-			Debug.Log("Loading scene1");
-			SceneManager.LoadScene("scene1");
+		if (coll.gameObject.tag == "store" ) {
+			// SpawnPoint.SwitchToLevel (this.gameObject);
+			GameState.isGamePaused  = true;
+			GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeAll;
+			Debug.Log("Loading store");
+			SceneManager.LoadScene("store2", LoadSceneMode.Additive);
 		}
 		if (coll.gameObject.tag == "exit" ) {
 			SpawnPoint.SwitchToLevel (this.gameObject);

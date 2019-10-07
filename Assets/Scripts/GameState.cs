@@ -12,15 +12,26 @@ public static class GameState
 	public static GameObject appleCountText;
 
 	public static GameObject appleTotalCountText;
+	public static GameObject JetPackFuelText;
+	public static GameObject JetPackFuelPacketText;
 
 	public static int appleTotalCount = 0;
-	public static int fullnessCount = 100;  // at 0 you die
+	public static int fullnessCount = 50;  // at 0 you die
 	public static int appleCount = 0;	// at 100 you create surplus
 	public static int surplusCount = 0;
+
+	public static bool hasJetpack = false;
+	public static bool hasDoubleJump = false;
+	public static bool hasSprint = false;
+	public static bool isGamePaused = false;
+	public static int jetFuelPacketes = 0;
+
+	public static string currentLevel = "scene1";
 
 	public static void SetPlayerDroplet(GameObject droplet){
 		GameState.droplet = droplet;
 	}
+
 
 	public static Player GetPlayerDroplet(){
 		if(droplet == null){
@@ -34,5 +45,17 @@ public static class GameState
 
 		return droplet.GetComponent<Player>();
 	}
+	 public static void resetAll() {
+	  appleTotalCount = 0;
+	  fullnessCount = 50;  // at 0 you die
+	  appleCount = 0;	// at 100 you create surplus
+	  surplusCount = 0;
+	  jetFuelPacketes = 0;
+	  hasJetpack = false;
+	  hasDoubleJump = false;
+	  hasSprint = false;
+	  isGamePaused = false;	
+	}
+
 	
 }
