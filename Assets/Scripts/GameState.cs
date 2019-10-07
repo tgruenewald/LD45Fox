@@ -17,7 +17,7 @@ public static class GameState
 
 	public static int appleTotalCount = 0;
 	public static int fullnessCount = 20;  // at 0 you die
-	public static int appleCount = 30;	// at 100 you create surplus
+	public static int appleCount = 10;	// at 100 you create surplus
 	public static int surplusCount = 0;
 
 	public static bool hasJetpack = false;

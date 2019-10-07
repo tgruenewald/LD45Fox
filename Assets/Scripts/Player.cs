@@ -61,11 +61,13 @@ public class Player : MonoBehaviour {
 	IEnumerator Fullness() {
 		while (true) {
 			yield return new WaitForSeconds(3);
+			fuelMessage = true;
 			if (!GameState.isGamePaused) {
 				if (GameState.appleCount > 0) {
 					GameState.appleCount--;
 				} else {
 					// hungry
+					yield return new WaitForSeconds(0.5f);
 					floatingText.GetComponent<TextMesh>().text = GetFullnessText();
 					Instantiate(floatingText, transform.position, Quaternion.identity, transform);
 					GameState.fullnessCount--;
@@ -75,7 +77,6 @@ public class Player : MonoBehaviour {
 						Destroy(gameObject);
 						SceneManager.LoadScene("gameover");
 					}
-					fuelMessage = true;
 				}
 			}
 
