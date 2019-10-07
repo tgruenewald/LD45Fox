@@ -20,7 +20,7 @@ public class title : MonoBehaviour
         SceneManager.LoadScene("title");
     }    
     public void loadGame()  {
-        SceneManager.LoadScene("scene1");
+        SceneManager.LoadScene("intro");
     }
     public void loadCredits()  {
         SceneManager.LoadScene("credits");

@@ -188,7 +188,9 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Get jet fuel 5 apples
+  m_Text: 'Jet fuel - Cost 5 apples
+
+    You need this if you have a jet pack
 
 '
 --- !u!222 &115273267
@@ -555,6 +557,27 @@ PrefabInstance:
     - target: {fileID: 626673652, guid: 023cf0baa3b7b744b8deefe9355404c0, type: 3}
       propertyPath: m_Text
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 268972358, guid: 023cf0baa3b7b744b8deefe9355404c0, type: 3}
+      propertyPath: m_Text
+      value: 'Double jump - Cost 10 apples
+
+        Enables a jump after you jump'
+      objectReference: {fileID: 0}
+    - target: {fileID: 935850635, guid: 023cf0baa3b7b744b8deefe9355404c0, type: 3}
+      propertyPath: m_Text
+      value: 'Jetpack - Cost 20 apples
+
+        Press left ctrl button to activate jet pack.  Must have at least one jet fuel
+        cannister.  Each fuel cannister runs for a limited time.
+
+'
+      objectReference: {fileID: 0}
+    - target: {fileID: 1662873803, guid: 023cf0baa3b7b744b8deefe9355404c0, type: 3}
+      propertyPath: m_Text
+      value: 'Sprint - Cost 5 apples
+
+        Press and hold shift key while moving to move faster.  Uses no stamina.'
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 023cf0baa3b7b744b8deefe9355404c0, type: 3}

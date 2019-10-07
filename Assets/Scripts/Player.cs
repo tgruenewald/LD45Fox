@@ -35,6 +35,12 @@ public class Player : MonoBehaviour {
 	IEnumerator Fuel() {
 		while (true) {
 			yield return new WaitForSeconds(0.5f);
+			if (GameState.appleTotalCount <= 0) {
+				// change to next level
+				SpawnPoint.SwitchToLevel (this.gameObject);
+				SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+			}
+
 			GameState.JetPackFuelText.GetComponent<Text>().text = jetPackFuel.ToString();
 			hasDoubleJump = GameState.hasDoubleJump;
 			hasJetPack = GameState.hasJetpack;
@@ -61,6 +67,7 @@ public class Player : MonoBehaviour {
 	IEnumerator Fullness() {
 		while (true) {
 			yield return new WaitForSeconds(3);
+
 			fuelMessage = true;
 			if (!GameState.isGamePaused) {
 				if (GameState.appleCount > 0) {
@@ -68,8 +75,11 @@ public class Player : MonoBehaviour {
 				} else {
 					// hungry
 					yield return new WaitForSeconds(0.5f);
-					floatingText.GetComponent<TextMesh>().text = GetFullnessText();
-					Instantiate(floatingText, transform.position, Quaternion.identity, transform);
+					if (GameState.fullnessCount < 20) {
+						floatingText.GetComponent<TextMesh>().text = GetFullnessText();
+						Instantiate(floatingText, transform.position, Quaternion.identity, transform);
+					}
+
 					GameState.fullnessCount--;
 					if (GameState.fullnessCount <= 0) {
 						// you died

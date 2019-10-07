@@ -16,8 +16,8 @@ public static class GameState
 	public static GameObject JetPackFuelPacketText;
 
 	public static int appleTotalCount = 0;
-	public static int fullnessCount = 20;  // at 0 you die
-	public static int appleCount = 10;	// at 100 you create surplus
+	public static int fullnessCount = 50;  // at 0 you die
+	public static int appleCount = 0;	// at 100 you create surplus
 	public static int surplusCount = 0;
 
 	public static bool hasJetpack = false;
@@ -47,8 +47,8 @@ public static class GameState
 	}
 	 public static void resetAll() {
 	  appleTotalCount = 0;
-	  fullnessCount = 20;  // at 0 you die
-	  appleCount = 10;	// at 100 you create surplus
+	  fullnessCount = 50;  // at 0 you die
+	  appleCount = 0;	// at 100 you create surplus
 	  surplusCount = 0;
 	  jetFuelPacketes = 0;
 	  hasJetpack = false;
