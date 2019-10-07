@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public class Player : MonoBehaviour {
 	private float move;
-	public static int defalutJumpNum = 1;
+	public static int defalutJumpNum = 3;
 	public int jumpNum = defalutJumpNum;
 	private bool jump = false;
 	public float maxSpeed = 3.0f;
@@ -37,7 +37,9 @@ public class Player : MonoBehaviour {
 			yield return new WaitForSeconds(0.5f);
 			if (GameState.appleTotalCount <= 0) {
 				// change to next level
-				SpawnPoint.SwitchToLevel (this.gameObject);
+				// SpawnPoint.SwitchToLevel (this.gameObject);
+				GameState.resetAll();
+				Destroy(gameObject);
 				SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
 			}
 
@@ -238,7 +240,9 @@ public class Player : MonoBehaviour {
 			if(hasDoubleJump && jump && jumpNum > 0)
 			{
 				Debug.Log("double jump");
-				GetComponent<Rigidbody2D> ().AddForce(new Vector2(0f, 4f * jumpForce), ForceMode2D.Impulse);
+				floatingText.GetComponent<TextMesh>().text ="Double Jump";
+				Instantiate(floatingText, transform.position, Quaternion.identity, transform);	
+				GetComponent<Rigidbody2D> ().AddForce(new Vector2(0f, 8f * jumpForce), ForceMode2D.Impulse);
 				jumpNum--;
 				
 			}
