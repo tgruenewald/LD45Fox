@@ -33,7 +33,8 @@ public class Player : MonoBehaviour {
 			hasDoubleJump = GameState.hasDoubleJump;
 			hasJetPack = GameState.hasJetpack;
 			hasSprint = GameState.hasSprint;
-
+			GameState.fullnessCountText.GetComponent<Text>().text = GameState.fullnessCount.ToString();
+			GameState.appleCountText.GetComponent<Text>().text = GameState.appleCount.ToString();
 		}
 	}
 
@@ -45,6 +46,10 @@ public class Player : MonoBehaviour {
 					GameState.appleCount--;
 				} else {
 					GameState.fullnessCount--;
+					if (GameState.fullnessCount <= 0) {
+						// you died
+						SceneManager.LoadScene("gameover");
+					}
 				}
 			}
 
@@ -189,7 +194,12 @@ public class Player : MonoBehaviour {
 			GameState.appleCount++;
 			GameState.appleTotalCount--;
 			if (GameState.fullnessCount < 100) {
-				GameState.fullnessCount++;
+				if (GameState.fullnessCount >= 97) {
+					GameState.fullnessCount = 100;
+				} else {
+					GameState.fullnessCount += 3;
+				}
+
 				GameState.appleCount--;
 			}
 			GameState.appleCountText.GetComponent<Text>().text = GameState.appleCount.ToString();

@@ -14,7 +14,6 @@ GameObject:
   - component: {fileID: 114367353873376442}
   - component: {fileID: 95418454608356982}
   - component: {fileID: 4794082638947253460}
-  - component: {fileID: 4492861773251548640}
   - component: {fileID: 5012102818030851398}
   m_Layer: 8
   m_Name: Droplet
@@ -168,14 +167,6 @@ CircleCollider2D:
   m_Offset: {x: -0.15, y: -0.069999985}
   serializedVersion: 2
   m_Radius: 0.6485505
---- !u!81 &4492861773251548640
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1517385831629306}
-  m_Enabled: 1
 --- !u!82 &5012102818030851398
 AudioSource:
   m_ObjectHideFlags: 0
