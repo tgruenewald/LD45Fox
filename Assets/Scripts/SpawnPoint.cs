@@ -25,9 +25,15 @@ public class SpawnPoint : MonoBehaviour {
 
 
 	}
-
+	public void buyJetfuel() {
+		if (GameState.appleCount >= 5) {
+			Debug.Log("You have a jet fuel");
+			GameState.appleCount -= 5;
+			GameState.jetFuelPacketes += 1;
+		}
+	}	
 	public void buyJetpack() {
-		if (!GameState.hasJetpack && GameState.appleCount > 20) {
+		if (!GameState.hasJetpack && GameState.appleCount >= 20) {
 			Debug.Log("You have a jet pack");
 			GameState.appleCount -= 20;
 			GameState.hasJetpack = true;
@@ -35,7 +41,7 @@ public class SpawnPoint : MonoBehaviour {
 	}	
 
 	public void buyDoubleJump() {
-		if (!GameState.hasDoubleJump && GameState.appleCount > 10) {
+		if (!GameState.hasDoubleJump && GameState.appleCount >= 10) {
 			Debug.Log("You have double jump");
 			GameState.appleCount -= 10;
 			GameState.hasDoubleJump = true;
@@ -43,7 +49,7 @@ public class SpawnPoint : MonoBehaviour {
 	}	
 
 	public void buySprint() {
-		if (!GameState.hasSprint && GameState.appleCount > 5) {
+		if (!GameState.hasSprint && GameState.appleCount >= 5) {
 			Debug.Log("You have sprint");
 			GameState.appleCount -= 5;
 			GameState.hasSprint = true;

@@ -20,12 +20,14 @@ public class Player : MonoBehaviour {
 	public bool hasSprint = false;
 	public int jetPackFuel = 100;
 	public int jetpackMaxFuel = 100;
+	bool fuelMessage = true;
 	public float jetpackstrength;
 	private CircleCollider2D groundCheck;
 	private Animator animator;
 	private bool facingRight = true;
 
 	public GameObject floatingText;
+	bool fuelReady = true;
 
 	private CharacterController playerCharController;
 	  
@@ -39,16 +41,33 @@ public class Player : MonoBehaviour {
 			hasSprint = GameState.hasSprint;
 			GameState.fullnessCountText.GetComponent<Text>().text = GameState.fullnessCount.ToString();
 			GameState.appleCountText.GetComponent<Text>().text = GameState.appleCount.ToString();
+			GameState.JetPackFuelPacketText.GetComponent<Text>().text = GameState.jetFuelPacketes.ToString();
 		}
+	}
+
+	string GetFullnessText() {
+		if (GameState.fullnessCount > 15) {
+			return "Hungry";
+		} 
+		if (GameState.fullnessCount > 10) {
+			return "Starving";
+		} 
+		if (GameState.fullnessCount > 5) {
+			return "FAMISHED!";
+		} 		
+		return "Dying!!!!";
 	}
 
 	IEnumerator Fullness() {
 		while (true) {
-			yield return new WaitForSeconds(2);
+			yield return new WaitForSeconds(3);
 			if (!GameState.isGamePaused) {
 				if (GameState.appleCount > 0) {
 					GameState.appleCount--;
 				} else {
+					// hungry
+					floatingText.GetComponent<TextMesh>().text = GetFullnessText();
+					Instantiate(floatingText, transform.position, Quaternion.identity, transform);
 					GameState.fullnessCount--;
 					if (GameState.fullnessCount <= 0) {
 						// you died
@@ -56,6 +75,7 @@ public class Player : MonoBehaviour {
 						Destroy(gameObject);
 						SceneManager.LoadScene("gameover");
 					}
+					fuelMessage = true;
 				}
 			}
 
@@ -74,6 +94,7 @@ public class Player : MonoBehaviour {
 		GameObject[] apples = GameObject.FindGameObjectsWithTag("apple");
 		GameState.appleTotalCountText = GameObject.Find("AppleTotalCount");
 		GameState.JetPackFuelText = GameObject.Find("JetPackFuelText");
+		GameState.JetPackFuelPacketText = GameObject.Find("JetPackFuelPacketText");
 		GameState.appleTotalCountText.GetComponent<Text>().text = apples.Length.ToString();
 		GameState.appleTotalCount = apples.Length;
 		StartCoroutine("Fullness");
@@ -118,11 +139,25 @@ public class Player : MonoBehaviour {
 		else {
 			animator.SetBool("isMoving", false);
 		}
-		
-		if (hasJetPack) {
+		if (hasJetPack && Input.GetButton("Fly") && GameState.jetFuelPacketes <= 0) {
+			if (fuelMessage) {
+				floatingText.GetComponent<TextMesh>().text = "No fuel";
+				Instantiate(floatingText, transform.position, Quaternion.identity, transform);							
+				fuelMessage = false;
+			}
+			animator.SetBool("IsFlying",false);
+		}
+		if (hasJetPack && GameState.jetFuelPacketes > 0) {
 			if(Input.GetButton("Fly"))
 			{
 				animator.SetBool("IsFlying",true);
+
+				if (fuelMessage) {
+					floatingText.GetComponent<TextMesh>().text = GameState.jetFuelPacketes.ToString() + " fuel left";
+					Instantiate(floatingText, transform.position, Quaternion.identity, transform);				
+					fuelMessage = false;
+				}
+
 				Debug.Log("fly");
 			}
 			else
@@ -131,6 +166,11 @@ public class Player : MonoBehaviour {
 			}
 			if (jetPackFuel <= 0) {
 				animator.SetBool("IsFlying",false);
+				if (fuelReady) {
+					GameState.jetFuelPacketes--;
+					fuelReady = false;
+				}
+
 			}
 		}
 
@@ -162,6 +202,9 @@ public class Player : MonoBehaviour {
 				{
 					jetPackFuel++;
 				}
+				else {
+					fuelReady = true; 
+				}
 
 			}
 		if(Input.GetButton("Run") && hasSprint )
@@ -186,7 +229,7 @@ public class Player : MonoBehaviour {
 			}
 		}
 
-		if(hasJetPack && Input.GetButton("Fly") && jetPackFuel > 0)
+		if(hasJetPack && Input.GetButton("Fly") && jetPackFuel > 0 && GameState.jetFuelPacketes > 0)
 		{
 			GetComponent<Rigidbody2D> ().AddForce(new Vector2(0f, jetpackstrength), ForceMode2D.Impulse);
 			jetPackFuel--;
